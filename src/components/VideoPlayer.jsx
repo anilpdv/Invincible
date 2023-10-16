@@ -1,6 +1,5 @@
 import { Box, Divider, Flex } from "@mantine/core";
-import React from "react";
-import ReactPlayer from "react-player";
+import React, { useRef, useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import RelatedSongsList from "./RelatedSongsList";
 import Header from "./Header";
@@ -8,12 +7,35 @@ import { useSearchStore } from "../store";
 import { formatViewCount } from "./SongList";
 
 const VideoPlayer = () => {
-  let params = useParams();
-
+  const videoRef = useRef(null);
+  const params = useParams();
   const currentSong = useSearchStore((state) => state.currentSong);
   const relatedSongs = useSearchStore((state) => state.relatedSongs);
   const navigate = useNavigate();
-  console.log(params);
+  const url = `https://musiq-ecf9a99fa8d9.herokuapp.com/api/watch/${params.id}/${currentSong.title}.mp4`;
+
+  useEffect(() => {
+    if (videoRef.current) {
+      videoRef.current.load(); // Reload the video to force it to update
+      videoRef.current.play().catch((error) => {
+        console.error("Autoplay error:", error);
+      });
+
+      // Event listener for video end
+      videoRef.current.addEventListener("ended", () => {
+        handleVideoEnd();
+      });
+    }
+
+    // Cleanup the event listener when the component unmounts
+    return () => {
+      if (videoRef.current) {
+        videoRef.current.removeEventListener("ended", () => {
+          handleVideoEnd();
+        });
+      }
+    };
+  }, [params.id]); // Add params.id as a dependency to trigger the useEffect when it changes
 
   const handleVideoEnd = () => {
     useSearchStore.setState({ currentSong: relatedSongs[0] });
@@ -24,22 +46,29 @@ const VideoPlayer = () => {
     <>
       <Header />
       <div className="flex flex-col sm:flex-row lg:flex-row">
-        <div className="p-5 lg:p-10 h-23 md:w-4/5 ">
-          <ReactPlayer
+        <div className="p-3 lg:p-10 md:w-4/5 h-2/5">
+          <video
+            className="rounded-lg"
+            ref={videoRef}
             width={"100%"}
             controls
-            playing={true}
-            url={`https://musiq-ecf9a99fa8d9.herokuapp.com/api/watch/${params.id}/${currentSong.title}.mp4`}
-            onEnded={handleVideoEnd}
-          />
+            autoPlay // Enable autoplay
+          >
+            <source src={url} type="video/mp4" />
+            Your browser does not support the video tag.
+          </video>
 
-          <div className="pt-4 flex-col justify-around h-10 text-white">
-            <h1 className="text-4xl font-bold">{currentSong.title}</h1>
+          <div className="pt-2 flex-col justify-around h-10 text-white">
+            <h1 className="text-md font-bold md:text-2xl">
+              {currentSong.title}
+            </h1>
 
-            <h3 className="text-xl font-bold py-2">
+            <h3 className="text-sm font-bold sm:py-2 md:text-xl">
               {formatViewCount(currentSong.viewCount)} views
             </h3>
-            <p className="text-md">{currentSong.description}</p>
+            <p className="text-md hidden lg:block md:block">
+              {currentSong.description}
+            </p>
             <Divider />
           </div>
         </div>
