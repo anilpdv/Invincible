@@ -5,6 +5,7 @@ import RelatedSongsList from "./RelatedSongsList";
 import Header from "./Header";
 import { fetchRelatedSongs, useSearchStore } from "../store";
 import { formatViewCount } from "./SongList";
+import ReactPlayer from "react-player";
 
 const VideoPlayer = () => {
   const videoRef = useRef(null);
@@ -16,7 +17,6 @@ const VideoPlayer = () => {
   const relatedSongs = useSearchStore((state) => state.relatedSongs);
 
   const navigate = useNavigate();
-  const url = `${process.env.REACT_APP_BASE_URL}/api/watch/${params.id}/${currentSong.title}`;
 
   useEffect(() => {
     if (videoRef.current) {
@@ -42,22 +42,13 @@ const VideoPlayer = () => {
       <Header />
       <div className="flex flex-col sm:flex-row lg:flex-row">
         <div className="p-3 lg:p-10 md:w-4/5 h-2/5">
-          <video
-            className="rounded-lg"
-            // preload="auto"
-            ref={videoRef}
+          <ReactPlayer
             width={"100%"}
             controls
+            playing={true}
+            url={`https://www.youtube.com/watch?v=${params.id}`}
             onEnded={handleVideoEnd}
-            onError={(error) => {
-              console.log(error);
-            }}
-            autoPlay // Enable autoplay
-            // playsInline
-          >
-            <source src={url} type="video/mp4" />
-            Your browser does not support the video tag.
-          </video>
+          />
 
           <div className="pt-2 flex-col justify-around h-16 text-white">
             <h1 className="text-md font-bold md:text-2xl">
