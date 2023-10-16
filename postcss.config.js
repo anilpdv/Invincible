@@ -10,5 +10,9 @@ module.exports = {
         "mantine-breakpoint-xl": "88em",
       },
     },
+    "postcss-nesting": {}, // Add this line
+    "postcss-import": {},
+    tailwindcss: {},
+    autoprefixer: {},
   },
 };
