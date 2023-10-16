@@ -1,4 +1,4 @@
-import { Box, Divider, Flex } from "@mantine/core";
+import { Divider } from "@mantine/core";
 import React, { useRef, useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import RelatedSongsList from "./RelatedSongsList";
@@ -54,11 +54,14 @@ const VideoPlayer = () => {
             controls
             autoPlay // Enable autoplay
           >
-            <source src={url} type="video/mp4" />
+            <source
+              src={"https://media.w3.org/2010/05/sintel/trailer_hd.mp4"}
+              type="video/mp4"
+            />
             Your browser does not support the video tag.
           </video>
 
-          <div className="pt-2 flex-col justify-around h-10 text-white">
+          <div className="pt-2 flex-col justify-around h-24 text-white">
             <h1 className="text-md font-bold md:text-2xl">
               {currentSong.title}
             </h1>
