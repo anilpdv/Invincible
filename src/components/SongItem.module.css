@@ -1,0 +1,31 @@
+.card {
+  transition: transform 150ms ease, box-shadow 150ms ease;
+
+  &:hover {
+    transform: scale(1.01);
+    box-shadow: var(--mantine-shadow-md);
+  }
+}
+
+.content {
+  height: 100%;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  z-index: 1;
+}
+
+.title {
+  color: var(--mantine-color-white);
+  margin-bottom: rem(5px);
+}
+
+.bodyText {
+  color: var(--mantine-color-dark-2);
+  margin-left: rem(7px);
+}
+
+.author {
+  color: var(--mantine-color-dark-2);
+}
