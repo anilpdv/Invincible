@@ -23,11 +23,10 @@ const VideoPlayer = () => {
   return (
     <>
       <Header />
-      <Flex>
-        <Box p={20} className="w-4/5">
+      <div className="flex flex-col sm:flex-row lg:flex-row">
+        <div className="p-5 lg:p-10 h-23 md:w-4/5 ">
           <ReactPlayer
             width={"100%"}
-            height={"500px"}
             controls
             playing={true}
             url={`https://musiq-ecf9a99fa8d9.herokuapp.com/api/watch/${params.id}/${currentSong.title}.mp4`}
@@ -43,11 +42,11 @@ const VideoPlayer = () => {
             <p className="text-md">{currentSong.description}</p>
             <Divider />
           </div>
-        </Box>
-        <Box p={20} className="w-2/5">
+        </div>
+        <div className="p-5 md:w-3/5 lg:w-2/5">
           <RelatedSongsList />
-        </Box>
-      </Flex>
+        </div>
+      </div>
     </>
   );
 };

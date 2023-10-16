@@ -4,7 +4,7 @@ import { Search } from "./Search";
 
 const FrontPage = () => {
   return (
-    <Container>
+    <>
       <Center h={100} w={"100%"}>
         <Flex p={20} justify={"space-between"} className="font-sans">
           <Text p={20} fw={"bold"}>
@@ -17,11 +17,13 @@ const FrontPage = () => {
       </Center>
       <Center h={400}>
         <Flex direction={"column"}>
-          <h1 className="text-7xl font-mono font-bold">INVINCIBLE!</h1>
+          <h1 className="text-4xl md:text-5xl lg:text-7xl  font-mono font-bold">
+            INVINCIBLE!
+          </h1>
           <Search />
         </Flex>
       </Center>
-    </Container>
+    </>
   );
 };
 

@@ -16,7 +16,7 @@ const RelatedSongsList = () => {
   const relatedSongs = useSearchStore((state) => state.relatedSongs);
   return (
     <>
-      <List>
+      <div className="flex flex-col">
         {relatedSongs.map((song) => {
           if (song.thumbnails.length < 2) return null;
           let imageUrl = song.thumbnails[1].url;
@@ -37,7 +37,7 @@ const RelatedSongsList = () => {
             </div>
           );
         })}
-      </List>
+      </div>
     </>
   );
 };
