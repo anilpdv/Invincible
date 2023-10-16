@@ -17,26 +17,27 @@ const RelatedSongsList = () => {
   return (
     <>
       <div className="flex flex-col">
-        {relatedSongs.map((song) => {
-          if (song.thumbnails.length < 2) return null;
-          let imageUrl = song.thumbnails[1].url;
-          let title = song.title;
-          let author = song.channel.name;
-          let views = formatViewCount(song.viewCount);
+        {relatedSongs &&
+          relatedSongs.map((song) => {
+            if (song.thumbnails.length < 2) return null;
+            let imageUrl = song.thumbnails[1].url;
+            let title = song.title;
+            let author = song && song.channel && song.channel.name;
+            let views = formatViewCount(song.viewCount);
 
-          return (
-            <div className="p-2 " key={song.id}>
-              <SongItem
-                id={song.id}
-                image={imageUrl}
-                title={title}
-                author={author}
-                views={views}
-                song={song}
-              />
-            </div>
-          );
-        })}
+            return (
+              <div className="p-2 " key={song.id}>
+                <SongItem
+                  id={song.id}
+                  image={imageUrl}
+                  title={title}
+                  author={author}
+                  views={views}
+                  song={song}
+                />
+              </div>
+            );
+          })}
       </div>
     </>
   );

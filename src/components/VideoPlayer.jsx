@@ -3,43 +3,38 @@ import React, { useRef, useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import RelatedSongsList from "./RelatedSongsList";
 import Header from "./Header";
-import { useSearchStore } from "../store";
+import { fetchRelatedSongs, useSearchStore } from "../store";
 import { formatViewCount } from "./SongList";
 
 const VideoPlayer = () => {
   const videoRef = useRef(null);
   const params = useParams();
-  const currentSong = useSearchStore((state) => state.currentSong);
+
+  const { currentSong, setCurrentSong, setRelatedSongs } = useSearchStore(
+    (store) => store
+  );
   const relatedSongs = useSearchStore((state) => state.relatedSongs);
+
   const navigate = useNavigate();
-  const url = `https://musiq-ecf9a99fa8d9.herokuapp.com/api/watch/${params.id}/${currentSong.title}.mp4`;
+  const url = `${process.env.REACT_APP_BASE_URL}/api/watch/${params.id}/${currentSong.title}`;
 
   useEffect(() => {
     if (videoRef.current) {
-      videoRef.current.load(); // Reload the video to force it to update
-      videoRef.current.play().catch((error) => {
-        console.error("Autoplay error:", error);
-      });
-
-      // Event listener for video end
-      videoRef.current.addEventListener("ended", () => {
-        handleVideoEnd();
-      });
+      videoRef.current.load();
+      videoRef.current.play(); // Reload the video to force it to update
     }
+  }, [params.id]);
 
-    // Cleanup the event listener when the component unmounts
-    return () => {
-      if (videoRef.current) {
-        videoRef.current.removeEventListener("ended", () => {
-          handleVideoEnd();
-        });
+  const handleVideoEnd = async () => {
+    if (relatedSongs && relatedSongs.length > 0) {
+      let nextSong = relatedSongs[0];
+      if (nextSong) {
+        setCurrentSong(nextSong);
+        let relatedSongs = await fetchRelatedSongs(nextSong.id);
+        setRelatedSongs(relatedSongs);
+        navigate("/video/" + nextSong.id);
       }
-    };
-  }, [params.id]); // Add params.id as a dependency to trigger the useEffect when it changes
-
-  const handleVideoEnd = () => {
-    useSearchStore.setState({ currentSong: relatedSongs[0] });
-    navigate(`/video/${relatedSongs[0].id}`);
+    }
   };
 
   return (
@@ -49,19 +44,22 @@ const VideoPlayer = () => {
         <div className="p-3 lg:p-10 md:w-4/5 h-2/5">
           <video
             className="rounded-lg"
+            // preload="auto"
             ref={videoRef}
             width={"100%"}
             controls
+            onEnded={handleVideoEnd}
+            onError={(error) => {
+              console.log(error);
+            }}
             autoPlay // Enable autoplay
+            // playsInline
           >
-            <source
-              src={"https://media.w3.org/2010/05/sintel/trailer_hd.mp4"}
-              type="video/mp4"
-            />
+            <source src={url} type="video/mp4" />
             Your browser does not support the video tag.
           </video>
 
-          <div className="pt-2 flex-col justify-around h-24 text-white">
+          <div className="pt-2 flex-col justify-around h-16 text-white">
             <h1 className="text-md font-bold md:text-2xl">
               {currentSong.title}
             </h1>

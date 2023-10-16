@@ -3,38 +3,27 @@ import { Card, Text, Group, Center, rem, useMantineTheme } from "@mantine/core";
 import { Image, AspectRatio } from "@mantine/core";
 import classes from "./SongItem.module.css";
 import { useNavigate } from "react-router-dom";
-import { useSearchStore } from "../store";
+import { fetchRelatedSongs, useSearchStore } from "../store";
 
 export function SongItem({ id, image, title, author, views, song }) {
   const theme = useMantineTheme();
   const navigate = useNavigate();
-  const { setRelatedSongs, setCurrentSong } = useSearchStore((store) => store);
-  async function fetchRelatedSongs() {
-    try {
-      const response = await fetch(
-        "https://musiq-ecf9a99fa8d9.herokuapp.com/api/getvideo/" + id
-      );
-      if (!response.ok) {
-        throw new Error("Failed to fetch songs");
-      }
-      const data = await response.json();
-      console.log(data);
-      setRelatedSongs(data);
-      setCurrentSong(song);
-      navigate("/video/" + id);
-    } catch (error) {
-      console.error(error);
-    }
-  }
+  const { setCurrentSong, setRelatedSongs } = useSearchStore((store) => store);
+
+  const handleFetchRelatedSongs = async (id) => {
+    let relatedSongs = await fetchRelatedSongs(id);
+    setCurrentSong(song);
+    setRelatedSongs(relatedSongs);
+    navigate("/video/" + id);
+  };
   return (
     <Card
       key={title}
       p="md"
       radius="md"
       component="a"
-      onClick={() => {
-        console.log("clicked");
-        fetchRelatedSongs();
+      onClick={(e) => {
+        handleFetchRelatedSongs(id);
       }}
       className={classes.card + " cursor-pointer"}
     >

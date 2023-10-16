@@ -15,7 +15,7 @@ export function Search(props) {
   async function fetchSongs() {
     try {
       const response = await fetch(
-        "https://musiq-ecf9a99fa8d9.herokuapp.com/api/search/" + value
+        `${process.env.REACT_APP_BASE_URL}/api/search/` + value
       );
       if (!response.ok) {
         throw new Error("Failed to fetch songs");
