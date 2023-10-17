@@ -23,7 +23,8 @@ const RelatedSongsList = () => {
           const author = song && song.author && song.author.name;
           const views = formatViewCount(song.view_count);
           const description = song.description;
-
+          const durationInSeconds = song.length_seconds;
+          const duration = formatDuration(durationInSeconds);
           const delay = index * 0.1; // Add delay to create a stagger effect
 
           return (
@@ -41,6 +42,7 @@ const RelatedSongsList = () => {
                 author={author}
                 views={views}
                 description={description}
+                duration={duration}
               />
             </motion.div>
           );
@@ -48,5 +50,11 @@ const RelatedSongsList = () => {
     </motion.div>
   );
 };
+
+function formatDuration(durationInSeconds) {
+  const minutes = Math.floor(durationInSeconds / 60);
+  const seconds = durationInSeconds % 60;
+  return `${minutes}:${seconds.toString().padStart(2, "0")}`;
+}
 
 export default RelatedSongsList;

@@ -1,5 +1,5 @@
 import React from "react";
-import { IconEye } from "@tabler/icons-react";
+import { IconAlarm, IconEye } from "@tabler/icons-react";
 import { Card, Text, Group, Center, rem, useMantineTheme } from "@mantine/core";
 import { Image, AspectRatio } from "@mantine/core";
 import { motion } from "framer-motion";
@@ -8,7 +8,15 @@ import { fetchRelatedSongsV2, useSearchStore } from "../store";
 import { useNavigate } from "react-router-dom";
 import classes from "./SongItem.module.css";
 
-export function SongItem({ id, image, title, author, views, description }) {
+export function SongItem({
+  id,
+  image,
+  title,
+  author,
+  views,
+  description,
+  duration,
+}) {
   const theme = useMantineTheme();
   const navigate = useNavigate();
   const { setCurrentSong, setRelatedSongs, setVideoDetails } = useSearchStore(
@@ -42,7 +50,7 @@ export function SongItem({ id, image, title, author, views, description }) {
         animate={{ opacity: 1 }}
         transition={{ duration: 0.5, delay: 0.1 }}
       >
-        <AspectRatio ratio={720 / 404}>
+        <AspectRatio ratio={336 / 188}>
           <Image src={image} />
         </AspectRatio>
       </motion.div>
@@ -84,6 +92,35 @@ export function SongItem({ id, image, title, author, views, description }) {
                 {views}
               </Text>
             </Center>
+            {duration ? (
+              <motion.div
+                initial={{ opacity: 0, y: 50 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.5, delay: 0.6 }}
+              >
+                <Group gap="md" my={5}>
+                  <Center>
+                    <IconAlarm
+                      style={{
+                        width: rem(18),
+                        height: rem(18),
+                        marginRight: rem(4),
+                      }}
+                      stroke={1.5}
+                      color={theme.colors.dark[2]}
+                    />
+                    <Text
+                      p={3}
+                      fw={500}
+                      className={classes.bodyText + " text-white font-bold"}
+                      style={{ marginLeft: rem(4) }}
+                    >
+                      {duration}
+                    </Text>
+                  </Center>
+                </Group>
+              </motion.div>
+            ) : null}
           </Group>
         </motion.div>
       ) : null}
