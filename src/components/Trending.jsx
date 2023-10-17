@@ -31,7 +31,7 @@ const Trending = () => {
 
   const fetchSongsByCountry = async (country) => {
     try {
-      let url = `https://www.googleapis.com/youtube/v3/videos?part=snippet&chart=mostPopular&regionCode=${country}&maxResults=200&key=${process.env.REACT_APP_YOUTUBE_API_KEY}`;
+      let url = `https://www.googleapis.com/youtube/v3/videos?part=snippet&chart=mostPopular&regionCode=${country}&videoCategoryId=${type}&maxResults=200&key=${process.env.REACT_APP_YOUTUBE_API_KEY}`;
       const response = await fetch(url);
       if (!response.ok) {
         throw new Error("Failed to fetch songs");
@@ -68,7 +68,12 @@ const Trending = () => {
           value={country}
           onChange={(value) => {
             setCountry(value);
-            fetchSongsByCountry(value);
+
+            if (type === "Default") {
+              fetchTrendingSongs();
+            } else {
+              fetchSongsByCountry(value);
+            }
           }}
           searchable
         />
