@@ -73,7 +73,7 @@ const VideoPlayer = () => {
 
           <div className="pt-3 flex-col justify-around h-16 text-gray-400">
             <motion.h1
-              className="text-md font-bold md:text-2xl"
+              className="text-md md:text-2xl tracking-wider"
               initial={{ opacity: 0, y: 50 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.8, delay: 0.2, ease: "easeOut" }}
@@ -82,7 +82,7 @@ const VideoPlayer = () => {
             </motion.h1>
 
             <motion.h3
-              className="text-sm font-bold sm:py-2 md:text-xl"
+              className="text-sm sm:py-2 md:text-xl tracking-wider text-gray-500"
               initial={{ opacity: 0, y: 50 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.8, delay: 0.4, ease: "easeOut" }}
@@ -91,7 +91,7 @@ const VideoPlayer = () => {
             </motion.h3>
 
             <motion.p
-              className="text-md hidden lg:block md:block text-gray-500"
+              className="text-md hidden lg:block md:block text-gray-600"
               initial={{ opacity: 0, y: 50 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.8, delay: 0.6, ease: "easeOut" }}
