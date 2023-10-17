@@ -1,45 +1,51 @@
-import { List } from "@mantine/core";
 import { useSearchStore } from "../store";
+import { formatViewCount } from "../utils/helper";
 import { SongItem } from "./SongItem";
 
-function formatViewCount(viewCount) {
-  if (viewCount >= 1000000) {
-    return (viewCount / 1000000).toFixed(1) + "m";
-  } else if (viewCount >= 1000) {
-    return (viewCount / 1000).toFixed(1) + "k";
-  } else {
-    return viewCount;
-  }
-}
+import { motion } from "framer-motion";
 
 const RelatedSongsList = () => {
   const relatedSongs = useSearchStore((state) => state.relatedSongs);
-  return (
-    <>
-      <div className="flex flex-col">
-        {relatedSongs &&
-          relatedSongs.map((song) => {
-            if (song.thumbnails.length < 2) return null;
-            let imageUrl = song.thumbnails[1].url;
-            let title = song.title;
-            let author = song && song.channel && song.channel.name;
-            let views = formatViewCount(song.viewCount);
 
-            return (
-              <div className="p-2 " key={song.id}>
-                <SongItem
-                  id={song.id}
-                  image={imageUrl}
-                  title={title}
-                  author={author}
-                  views={views}
-                  song={song}
-                />
-              </div>
-            );
-          })}
-      </div>
-    </>
+  return (
+    <motion.div
+      className="flex flex-col"
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      transition={{ duration: 0.5 }}
+    >
+      {relatedSongs &&
+        relatedSongs.map((song, index) => {
+          if (song.thumbnails.length < 2) return null;
+
+          const imageUrl = song.thumbnails[1].url;
+          const title = song.title;
+          const author = song && song.author && song.author.name;
+          const views = formatViewCount(song.view_count);
+          const description = song.description;
+
+          const delay = index * 0.1; // Add delay to create a stagger effect
+
+          return (
+            <motion.div
+              className="p-2"
+              key={song.id}
+              initial={{ opacity: 0, y: -10 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5, delay }}
+            >
+              <SongItem
+                id={song.id}
+                image={imageUrl}
+                title={title}
+                author={author}
+                views={views}
+                description={description}
+              />
+            </motion.div>
+          );
+        })}
+    </motion.div>
   );
 };
 

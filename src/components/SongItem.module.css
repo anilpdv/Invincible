@@ -24,6 +24,7 @@
 .bodyText {
   color: var(--mantine-color-dark-2);
   margin-left: rem(7px);
+  font-size: rem(10px);
 }
 
 .author {
