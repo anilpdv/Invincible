@@ -48,7 +48,7 @@ export function SongItem({ id, image, title, author, views, description }) {
         </AspectRatio>
       </motion.div>
       <motion.h2
-        className={classes.title + " mt-2 line-clamp-2"}
+        className={classes.title + " mt-2 line-clamp-2 font-bold text-base"}
         initial={{ opacity: 0, y: 50 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5, delay: 0.2 }}

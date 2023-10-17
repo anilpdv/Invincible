@@ -34,6 +34,7 @@ const VideoPlayer = () => {
       videoRef.current.load();
       videoRef.current.play(); // Reload the video to force it to update
     }
+    window.scrollTo(0, 0); // Scroll to the top of the page
   }, [params.id]);
 
   const handleVideoEnd = async () => {
@@ -73,7 +74,7 @@ const VideoPlayer = () => {
 
           <div className="pt-3 flex-col justify-around h-16 text-gray-400">
             <motion.h1
-              className="text-md md:text-2xl tracking-wider"
+              className="text-md md:text-2xl text-white font-extrabold"
               initial={{ opacity: 0, y: 50 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.8, delay: 0.2, ease: "easeOut" }}
@@ -82,7 +83,7 @@ const VideoPlayer = () => {
             </motion.h1>
 
             <motion.h3
-              className="text-sm sm:py-2 md:text-xl tracking-wider text-gray-500"
+              className="text-sm sm:py-2 md:text-lg tracking-wider text-white-500"
               initial={{ opacity: 0, y: 50 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.8, delay: 0.4, ease: "easeOut" }}

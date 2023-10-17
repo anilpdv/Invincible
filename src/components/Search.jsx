@@ -48,7 +48,6 @@ export function Search(props) {
           color={theme.primaryColor}
           variant="filled"
           onClick={() => {
-            console.log("Search");
             fetchSongs();
           }}
         >
