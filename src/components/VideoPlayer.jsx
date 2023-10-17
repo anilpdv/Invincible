@@ -11,7 +11,8 @@ import {
 } from "../store";
 
 import ReactPlayer from "react-player";
-import { formatViewCount } from "../utils/helper";
+import { formatViewCount, prettifyDescription } from "../utils/helper";
+import CommentList from "./CommentList";
 
 const VideoPlayer = () => {
   const videoRef = useRef(null);
@@ -92,20 +93,24 @@ const VideoPlayer = () => {
             </motion.h3>
 
             <motion.p
-              className="text-md hidden lg:block md:block text-gray-600"
+              className="text-md hidden lg:block md:block text-gray-400"
               initial={{ opacity: 0, y: 50 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.8, delay: 0.6, ease: "easeOut" }}
             >
               {showFullText
-                ? videoDetails.description
-                : `${videoDetails.description.slice(0, 400)}...`}
+                ? videoDetails && videoDetails.description
+                : `${videoDetails.description.slice(0, 200)}...`}
               <button
                 className="text-blue-500"
                 onClick={() => setShowFullText(!showFullText)}
               >
                 {showFullText ? "Show less" : "Show more"}
               </button>
+              <Divider m={10} />
+              <>
+                <CommentList id={params.id} />
+              </>
             </motion.p>
             <Divider m={10} />
           </div>

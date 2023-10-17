@@ -19,7 +19,6 @@ export function SongItem({ id, image, title, author, views, description }) {
     let data = await fetchRelatedSongsV2(id);
     let videoDetails = data.videoDetails;
     let relatedSongs = data.relatedSongs;
-    console.log(data);
     setCurrentSong({ id, image, title, author, views, description });
     setRelatedSongs(relatedSongs);
     setVideoDetails(videoDetails);

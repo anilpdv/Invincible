@@ -21,7 +21,6 @@ export function Search(props) {
         throw new Error("Failed to fetch songs");
       }
       const data = await response.json();
-      console.log(data);
       setSongs(data);
       setSearchTerm(value);
       navigate("/search");
