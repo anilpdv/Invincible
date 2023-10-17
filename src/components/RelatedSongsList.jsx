@@ -1,5 +1,5 @@
 import { useSearchStore } from "../store";
-import { formatViewCount } from "../utils/helper";
+import { formatDuration, formatViewCount } from "../utils/helper";
 import { SongItem } from "./SongItem";
 
 import { motion } from "framer-motion";
@@ -50,11 +50,5 @@ const RelatedSongsList = () => {
     </motion.div>
   );
 };
-
-function formatDuration(durationInSeconds) {
-  const minutes = Math.floor(durationInSeconds / 60);
-  const seconds = durationInSeconds % 60;
-  return `${minutes}:${seconds.toString().padStart(2, "0")}`;
-}
 
 export default RelatedSongsList;

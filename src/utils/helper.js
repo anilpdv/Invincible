@@ -33,3 +33,17 @@ export function prettifyDescription(description) {
 
   return prettifiedLines.join("\n");
 }
+
+export function formatDuration(durationInSeconds) {
+  const hours = Math.floor(durationInSeconds / 3600);
+  const minutes = Math.floor((durationInSeconds - hours * 3600) / 60);
+  const seconds = durationInSeconds % 60;
+  let duration = "";
+  if (hours > 0) {
+    duration += `${hours}:`;
+  }
+  duration += `${minutes.toString().padStart(2, "0")}:${seconds
+    .toString()
+    .padStart(2, "0")}`;
+  return duration;
+}

@@ -1,11 +1,10 @@
-import { Container, Divider } from "@mantine/core";
 import { useSearchStore } from "../store";
 import { SongItem } from "./SongItem";
 import { Search } from "./Search";
 import Header from "./Header";
 
 import { motion } from "framer-motion";
-import { formatViewCount } from "../utils/helper";
+import { formatDuration, formatViewCount } from "../utils/helper";
 
 const SongList = () => {
   const songs = useSearchStore((state) => state.songs);
@@ -25,6 +24,9 @@ const SongList = () => {
           let author = song.channel.name;
           let views = formatViewCount(song.viewCount);
           let description = song.description;
+          console.log(song);
+          const durationInSeconds = song.duration;
+          const duration = formatDuration(durationInSeconds);
           return (
             <motion.div // Wrap the song item in a motion component
               className="p-2"
@@ -40,6 +42,7 @@ const SongList = () => {
                 author={author}
                 views={views}
                 description={description}
+                duration={duration}
               />
             </motion.div>
           );
