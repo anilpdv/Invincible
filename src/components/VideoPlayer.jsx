@@ -4,7 +4,11 @@ import { useNavigate, useParams } from "react-router-dom";
 import { motion } from "framer-motion"; // Import the motion component from Framer Motion
 import RelatedSongsList from "./RelatedSongsList";
 import Header from "./Header";
-import { fetchRelatedSongs, useSearchStore } from "../store";
+import {
+  fetchRelatedSongs,
+  fetchRelatedSongsV2,
+  useSearchStore,
+} from "../store";
 
 import ReactPlayer from "react-player";
 import { formatViewCount } from "../utils/helper";
@@ -37,7 +41,7 @@ const VideoPlayer = () => {
       let nextSong = relatedSongs[0];
       if (nextSong) {
         setCurrentSong(nextSong);
-        let data = await fetchRelatedSongs(nextSong.id);
+        let data = await fetchRelatedSongsV2(nextSong.id);
 
         let relatedSongs = data.relatedSongs;
         let videoDetails = data.videoDetails;
