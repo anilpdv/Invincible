@@ -1,12 +1,14 @@
 import { MantineProvider } from "@mantine/core";
 import { theme } from "./theme";
-import { RouterProvider } from "react-router-dom";
-import { routes } from "./routes";
+import { BrowserRouter } from "react-router-dom";
+import { Router } from "./routes";
 
 function App() {
   return (
     <MantineProvider defaultColorScheme="dark" theme={theme}>
-      <RouterProvider router={routes}></RouterProvider>
+      <BrowserRouter>
+        <Router />
+      </BrowserRouter>
     </MantineProvider>
   );
 }

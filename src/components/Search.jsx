@@ -12,6 +12,7 @@ export function Search(props) {
   const [value, setValue] = useState(searchTerm ? searchTerm : "");
 
   const navigate = useNavigate();
+
   async function fetchSongs() {
     try {
       const response = await fetch(
