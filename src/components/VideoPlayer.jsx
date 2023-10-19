@@ -10,14 +10,11 @@ import RelatedSongsList from "./RelatedSongsList";
 import { fetchRelatedSongsV2 } from "../store";
 import { useQuery } from "react-query";
 import { Loader } from "@mantine/core";
-import {
-  IconThumbDown,
-  IconThumbDownFilled,
-  IconThumbUp,
-  IconThumbUpFilled,
-} from "@tabler/icons-react";
+import { IconThumbDownFilled, IconThumbUpFilled } from "@tabler/icons-react";
 import { useUser } from "@clerk/clerk-react";
 import { addSubscriber, addUser } from "../firebaseApi";
+import { collection, getDocs, query, where } from "firebase/firestore";
+import db from "../firebaseConfig";
 
 const VideoPlayer = () => {
   const videoRef = useRef(null);
@@ -25,7 +22,6 @@ const VideoPlayer = () => {
   const [showFullText, setShowFullText] = useState(false);
   const navigate = useNavigate();
   const user = useUser();
-  console.log("user", user);
   const [relatedSongs, setRelatedSongs] = useState([]);
   const [videoDetails, setVideoDetails] = useState({});
   const [subscribed, setSubscribed] = useState(false);
@@ -77,6 +73,25 @@ const VideoPlayer = () => {
     }
   };
 
+  useEffect(() => {
+    const setSubscribedState = async () => {
+      const q = query(
+        collection(db, "users"),
+        where("uid", "==", user.user.id)
+      );
+      let channelId = videoDetails.author?.id;
+      let isSubscribed = false;
+      const querySnapshot = await getDocs(q);
+      querySnapshot.forEach((doc) => {
+        let data = doc.data();
+        isSubscribed = data.subscribers.some((s) => s.id === channelId);
+      });
+
+      setSubscribed(isSubscribed);
+    };
+    setSubscribedState();
+  }, [params.id, user.user.id]);
+
   if (isLoading) {
     return (
       <Center h={"100vh"}>
@@ -118,7 +133,7 @@ const VideoPlayer = () => {
     let subscribers = videoDetails.author?.subscriber_count;
     let name = videoDetails.author?.name;
     let imageUrl = videoDetails.author?.thumbnails?.[1]?.url;
-
+    let channelId = videoDetails.author?.id;
     if (!subscribers || !name || !imageUrl) {
       return null;
     }
@@ -142,10 +157,11 @@ const VideoPlayer = () => {
               className="bg-teal-700 hover:bg-teal-600 text-white font-bold py-2 px-4 rounded-full cursor-pointer"
               onClick={() => {
                 addSubscriber(user.user.id, {
-                  id: params.id,
+                  id: channelId,
                   name,
                   imageUrl,
                   subscribers,
+                  videoId: params.id,
                 });
                 setSubscribed(true);
               }}

@@ -29,10 +29,8 @@ const addSubscriber = async (uid, subscribeData) => {
 
   const querySnapshot = await getDocs(q);
   querySnapshot.forEach((doc) => {
-    console.log(doc.id, " => ", doc.data());
     let data = doc.data();
     data.subscribers = [...data.subscribers, subscribeData];
-    console.log(data);
 
     updateDoc(doc.ref, data);
   });
