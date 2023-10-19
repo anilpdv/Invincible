@@ -1,61 +1,28 @@
 import React, { useEffect, useState } from "react";
 import Header from "./Header";
-import { SongItem } from "./SongItem";
+import SongItem from "./SongItem";
 import { motion } from "framer-motion";
 import { formatViewCount } from "../utils/helper";
 import { Select } from "@mantine/core";
 import { countryOptions, typeOptions } from "../utils/TrendingFilterOptions";
+import { useQuery } from "react-query";
+import { fetchSongs } from "../api";
+import { addUser } from "../firebaseApi";
+import { useSession, useUser } from "@clerk/clerk-react";
 
 const Trending = () => {
-  const [songs, setSongs] = useState([]);
   const [country, setCountry] = useState("US");
   const [type, setType] = useState("Default");
 
+  const {
+    data: songs,
+    isLoading,
+    isError,
+  } = useQuery(["songs", country, type], () => fetchSongs(country, type));
+
   useEffect(() => {
-    fetchTrendingSongs();
-  }, []);
-
-  const fetchTrendingSongs = async () => {
-    try {
-      let url = `https://www.googleapis.com/youtube/v3/videos?part=snippet&chart=mostPopular&regionCode=${country}&maxResults=200&key=${process.env.REACT_APP_YOUTUBE_API_KEY}`;
-      const response = await fetch(url);
-      if (!response.ok) {
-        throw new Error("Failed to fetch songs");
-      }
-      const data = await response.json();
-      setSongs(data.items);
-    } catch (error) {
-      console.error(error);
-    }
-  };
-
-  const fetchSongsByCountry = async (country) => {
-    try {
-      let url = `https://www.googleapis.com/youtube/v3/videos?part=snippet&chart=mostPopular&regionCode=${country}&videoCategoryId=${type}&maxResults=200&key=${process.env.REACT_APP_YOUTUBE_API_KEY}`;
-      const response = await fetch(url);
-      if (!response.ok) {
-        throw new Error("Failed to fetch songs");
-      }
-      const data = await response.json();
-      setSongs(data.items);
-    } catch (error) {
-      console.error(error);
-    }
-  };
-
-  const fetchSongsByType = async (type) => {
-    try {
-      let url = `https://www.googleapis.com/youtube/v3/videos?part=snippet&chart=mostPopular&regionCode=${country}&videoCategoryId=${type}&maxResults=200&key=${process.env.REACT_APP_YOUTUBE_API_KEY}`;
-      const response = await fetch(url);
-      if (!response.ok) {
-        throw new Error("Failed to fetch songs");
-      }
-      const data = await response.json();
-      setSongs(data.items);
-    } catch (error) {
-      console.error(error);
-    }
-  };
+    fetchSongs(country, type);
+  }, [country, type]);
 
   return (
     <>
@@ -68,12 +35,6 @@ const Trending = () => {
           value={country}
           onChange={(value) => {
             setCountry(value);
-
-            if (type === "Default") {
-              fetchTrendingSongs();
-            } else {
-              fetchSongsByCountry(value);
-            }
           }}
           searchable
         />
@@ -84,22 +45,18 @@ const Trending = () => {
           value={type}
           onChange={(value) => {
             setType(value);
-
-            if (value === "Default") {
-              fetchTrendingSongs();
-            } else {
-              fetchSongsByType(value);
-            }
           }}
         />
       </div>
+      {isLoading && <p>Loading...</p>}
+      {isError && <p>Error: {isError.message}</p>}
       <motion.div // Wrap the song list in a motion component
         className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-5 p-10"
         initial={{ opacity: 0, y: -50 }} // Set the initial animation state
         animate={{ opacity: 1, y: 0 }} // Set the animation state when the component mounts
         transition={{ duration: 0.5 }} // Set the duration of the animation
       >
-        {songs.map((song) => {
+        {songs?.map((song) => {
           if (
             song &&
             song.snippet &&

@@ -1,6 +1,5 @@
 import { useSearchStore } from "../store";
-import { SongItem } from "./SongItem";
-import { Search } from "./Search";
+import SongItem from "./SongItem";
 import Header from "./Header";
 
 import { motion } from "framer-motion";
@@ -24,7 +23,7 @@ const SongList = () => {
           let author = song.channel.name;
           let views = formatViewCount(song.viewCount);
           let description = song.description;
-          console.log(song);
+
           const durationInSeconds = song.duration;
           const duration = formatDuration(durationInSeconds);
           return (

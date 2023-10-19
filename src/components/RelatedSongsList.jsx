@@ -1,12 +1,10 @@
 import { useSearchStore } from "../store";
 import { formatDuration, formatViewCount } from "../utils/helper";
-import { SongItem } from "./SongItem";
+import SongItem from "./SongItem";
 
 import { motion } from "framer-motion";
 
-const RelatedSongsList = () => {
-  const relatedSongs = useSearchStore((state) => state.relatedSongs);
-
+const RelatedSongsList = ({ relatedSongs }) => {
   return (
     <motion.div
       className="flex flex-col"

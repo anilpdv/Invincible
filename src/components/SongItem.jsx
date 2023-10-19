@@ -1,22 +1,15 @@
 import React from "react";
 import { IconAlarm, IconEye } from "@tabler/icons-react";
-import { Card, Text, Group, Center, rem, useMantineTheme } from "@mantine/core";
+import { Text, Group, Center, rem, useMantineTheme } from "@mantine/core";
 import { Image, AspectRatio } from "@mantine/core";
 import { motion } from "framer-motion";
+import PropTypes from "prop-types";
 
 import { fetchRelatedSongsV2, useSearchStore } from "../store";
-import { useNavigate } from "react-router-dom";
 import classes from "./SongItem.module.css";
+import { useNavigate } from "react-router-dom";
 
-export function SongItem({
-  id,
-  image,
-  title,
-  author,
-  views,
-  description,
-  duration,
-}) {
+function SongItem({ id, image, title, author, views, description, duration }) {
   const theme = useMantineTheme();
   const navigate = useNavigate();
   const { setCurrentSong, setRelatedSongs, setVideoDetails } = useSearchStore(
@@ -24,13 +17,12 @@ export function SongItem({
   );
 
   const handleFetchRelatedSongs = async (id) => {
-    let data = await fetchRelatedSongsV2(id);
-    let videoDetails = data.videoDetails;
-    let relatedSongs = data.relatedSongs;
-    setCurrentSong({ id, image, title, author, views, description });
-    setRelatedSongs(relatedSongs);
-    setVideoDetails(videoDetails);
-    navigate("/video/" + id);
+    try {
+      setCurrentSong({ id, image, title, author, views, description });
+      navigate(`/video/${id}`);
+    } catch (error) {
+      console.error(error);
+    }
   };
 
   return (
@@ -40,7 +32,7 @@ export function SongItem({
       radius="md"
       component="a"
       onClick={() => handleFetchRelatedSongs(id)}
-      className={classes.card + " cursor-pointer"}
+      className={`${classes.card} cursor-pointer`}
       initial={{ opacity: 0, y: 50 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.5 }}
@@ -55,7 +47,7 @@ export function SongItem({
         </AspectRatio>
       </motion.div>
       <motion.h2
-        className={classes.title + " mt-2 line-clamp-2 font-bold text-base"}
+        className={`${classes.title} mt-2 line-clamp-2 font-bold text-base`}
         initial={{ opacity: 0, y: 50 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5, delay: 0.2 }}
@@ -71,7 +63,7 @@ export function SongItem({
           {author}
         </Text>
       </motion.div>
-      {views ? (
+      {views !== 0 && (
         <motion.div
           initial={{ opacity: 0, y: 50 }}
           animate={{ opacity: 1, y: 0 }}
@@ -92,7 +84,7 @@ export function SongItem({
                 {views}
               </Text>
             </Center>
-            {duration ? (
+            {duration && (
               <motion.div
                 initial={{ opacity: 0, y: 50 }}
                 animate={{ opacity: 1, y: 0 }}
@@ -112,7 +104,7 @@ export function SongItem({
                     <Text
                       p={3}
                       fw={500}
-                      className={classes.bodyText + " text-white font-bold"}
+                      className={`${classes.bodyText} text-white font-bold`}
                       style={{ marginLeft: rem(4) }}
                     >
                       {duration}
@@ -120,10 +112,22 @@ export function SongItem({
                   </Center>
                 </Group>
               </motion.div>
-            ) : null}
+            )}
           </Group>
         </motion.div>
-      ) : null}
+      )}
     </motion.div>
   );
 }
+
+SongItem.propTypes = {
+  id: PropTypes.string.isRequired,
+  image: PropTypes.string.isRequired,
+  title: PropTypes.string.isRequired,
+  author: PropTypes.string.isRequired,
+  views: PropTypes.number,
+  description: PropTypes.string,
+  duration: PropTypes.string,
+};
+
+export default SongItem;

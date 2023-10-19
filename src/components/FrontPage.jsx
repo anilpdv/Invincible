@@ -1,4 +1,4 @@
-import { Center, Flex, Text, Anchor } from "@mantine/core";
+import { Center, Flex, Anchor } from "@mantine/core";
 import React from "react";
 import { Search } from "./Search";
 import { useNavigate } from "react-router-dom";

@@ -7,13 +7,13 @@ import { NotFoundTitle } from "./components/NothingFound";
 import {
   ClerkProvider,
   RedirectToSignIn,
-  SignUp,
   SignedIn,
   SignedOut,
+  useUser,
 } from "@clerk/clerk-react";
 import { dark } from "@clerk/themes";
 import SignInView from "./components/Auth/SignInView";
-import SingUpView from "./components/Auth/SignUpView";
+import SignUpView from "./components/Auth/SignUpView";
 import UserProfileView from "./components/Auth/UserProfileView";
 
 if (!process.env.REACT_APP_CLERK_PUBLISHABLE_KEY) {
@@ -22,7 +22,7 @@ if (!process.env.REACT_APP_CLERK_PUBLISHABLE_KEY) {
 
 const clerkPubKey = process.env.REACT_APP_CLERK_PUBLISHABLE_KEY;
 
-export const Router = () => {
+const Router = () => {
   const navigate = useNavigate();
 
   return (
@@ -35,7 +35,7 @@ export const Router = () => {
         baseTheme: dark,
         elements: {
           formButtonPrimary:
-            "bg-teal-700 hover:bg-teal-500 text-sm normal-case",
+            "bg-teal-700 hover-bg-teal-500 text-sm normal-case",
           footerActionLink: "text-teal-700 hover:text-teal-500",
         },
       }}
@@ -45,24 +45,59 @@ export const Router = () => {
           path="/"
           element={
             <>
-              <SignedIn>
-                <FrontPage />
-              </SignedIn>
-              <SignedOut>
-                <RedirectToSignIn />
-              </SignedOut>
+              <FrontPage />
             </>
           }
         />
         <Route path="/sign-in/*" element={<SignInView />} />
-        <Route path="/sign-up/*" element={<SingUpView />} />
-        <Route path="/search" element={<SongList />} />
-        <Route path="/video/:id" element={<VideoPlayer />} />
-        <Route path="/trending" element={<Trending />} />
-        <Route path="/user-profile" element={<UserProfileView />} />
+        <Route path="/sign-up/*" element={<SignUpView />} />
+        <Route
+          path="/search"
+          element={
+            <>
+              <SignedIn>
+                <SongList />
+              </SignedIn>
+              <SignedOut>
+                <RedirectToSignIn redirectUrl={"/search"} />
+              </SignedOut>
+            </>
+          }
+        />
+        <Route
+          path="/video/:id"
+          element={
+            <SignedIn>
+              <VideoPlayer redirectUrl={"/video/:id"} />
+            </SignedIn>
+          }
+        />
+        <Route
+          path="/trending"
+          element={
+            <>
+              <SignedOut>
+                <RedirectToSignIn redirectUrl={"/trending"} />
+              </SignedOut>
+              <SignedIn>
+                <Trending />
+              </SignedIn>
+            </>
+          }
+        />
+        <Route
+          path="/user-profile"
+          element={
+            <SignedIn>
+              <UserProfileView />
+            </SignedIn>
+          }
+        />
 
         <Route path="*" element={<NotFoundTitle />} />
       </Routes>
     </ClerkProvider>
   );
 };
+
+export default Router;

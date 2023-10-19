@@ -1,18 +1,17 @@
 import React, { useEffect } from "react";
-import { Search } from "./Search";
-import { Divider } from "@mantine/core";
-import { Link, useLocation, useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import {
   SignInButton,
   SignedIn,
   SignedOut,
   UserButton,
 } from "@clerk/clerk-react";
+import { Search } from "./Search";
+import { Divider } from "@mantine/core";
 
 const Header = () => {
   const navigate = useNavigate();
-
   const location = useLocation();
 
   useEffect(() => {
@@ -40,6 +39,56 @@ const Header = () => {
     }
   };
 
+  const handleTitleClick = () => {
+    navigate("/");
+  };
+
+  const renderTrendingLink = () => {
+    if (location.pathname !== "/trending") {
+      return (
+        <Link to="/trending" className="text-teal-500">
+          Trending
+        </Link>
+      );
+    }
+    return null;
+  };
+
+  const renderUserButton = () => {
+    return (
+      <SignedIn>
+        <UserButton
+          afterSignOutUrl="/sign-in"
+          userProfileMode="modal"
+          userProfileProps={{
+            appearance: {
+              elements: {
+                profileSectionPrimaryButton__emailAddresses:
+                  " text-teal-500 normal-case",
+                profileSectionPrimaryButton__connectedAccounts:
+                  "text-teal-500 normal-case",
+                profileSectionPrimaryButton__password:
+                  " text-teal-500 normal-case",
+                badge: "bg-teal-800 text-teal-500",
+              },
+            },
+          }}
+        />
+      </SignedIn>
+    );
+  };
+
+  const renderSignInButton = () => {
+    return (
+      <SignedOut>
+        <SignInButton
+          redirectUrl={`${window.origin}/sign-in`}
+          afterSignInUrl="/trending"
+        />
+      </SignedOut>
+    );
+  };
+
   return (
     <>
       <motion.div
@@ -50,9 +99,7 @@ const Header = () => {
       >
         <motion.h1
           className="font-bold text-[20px] flex hidden lg:block md:block cursor-pointer"
-          onClick={() => {
-            navigate("/");
-          }}
+          onClick={handleTitleClick}
           initial={{ opacity: 0, x: -50 }}
           animate={{ opacity: 1, x: 0 }}
           transition={{ duration: 0.8, delay: 0.2, ease: "easeOut" }}
@@ -75,11 +122,7 @@ const Header = () => {
           animate={{ opacity: 1 }}
           transition={{ duration: 0.8, delay: 0.6, ease: "easeOut" }}
         >
-          {location.pathname !== "/trending" ? (
-            <Link to="/trending" className="text-teal-500">
-              Trending
-            </Link>
-          ) : null}
+          {renderTrendingLink()}
         </motion.div>
 
         <motion.div
@@ -88,32 +131,8 @@ const Header = () => {
           animate={{ opacity: 1, x: 0 }}
           transition={{ duration: 0.8, delay: 0.8, ease: "easeOut" }}
         >
-          <SignedIn>
-            {/* Mount the UserButton component */}
-            <UserButton
-              afterSignOutUrl="/sign-in"
-              userProfileMode="modal"
-              userProfileProps={{
-                appearance: {
-                  elements: {
-                    profileSectionPrimaryButton__emailAddresses:
-                      " text-teal-500 normal-case",
-                    profileSectionPrimaryButton__connectedAccounts:
-                      "text-teal-500 normal-case",
-                    profileSectionPrimaryButton__password:
-                      " text-teal-500 normal-case",
-                    badge: "bg-teal-800 text-teal-500",
-                  },
-                },
-              }}
-            />
-          </SignedIn>
-          <SignedOut>
-            <SignInButton
-              redirectUrl={`${window.origin}/sign-in`}
-              afterSignInUrl="/trending"
-            />
-          </SignedOut>
+          {renderUserButton()}
+          {renderSignInButton()}
         </motion.div>
       </motion.div>
 

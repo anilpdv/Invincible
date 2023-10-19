@@ -1,28 +1,18 @@
 import { List } from "@mantine/core";
 import { CommentItem } from "./CommentItem";
-import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
+import { useQuery } from "react-query";
+import { fetchComments } from "../api";
 
 const CommentList = ({ id = "Za45bT41sXg" }) => {
-  const [comments, setComments] = useState([]);
+  const {
+    isLoading,
+    error,
+    data: comments,
+  } = useQuery(["comments", id], async () => fetchComments(id));
 
-  useEffect(() => {
-    fetchComments(id);
-  }, [id]);
-
-  const fetchComments = async (id) => {
-    try {
-      let url = `https://calm-falls-42516-7348eaa4d02b.herokuapp.com/comments/${id}`;
-      const response = await fetch(url);
-      if (!response.ok) {
-        throw new Error("Failed to fetch comments");
-      }
-      const data = await response.json();
-      setComments(data);
-    } catch (error) {
-      console.error(error);
-    }
-  };
+  if (isLoading) return <div>Loading...</div>;
+  if (error) return <div>Error: {error.message}</div>;
 
   return (
     <motion.div
